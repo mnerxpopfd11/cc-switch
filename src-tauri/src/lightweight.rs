@@ -17,12 +17,13 @@ pub(crate) fn create_main_window(app: &tauri::AppHandle) -> tauri::Result<Webvie
                 "main window configuration not found",
             ))
         })?;
-    let mut builder = WebviewWindowBuilder::from_config(app, window_config)?;
+    let builder = WebviewWindowBuilder::from_config(app, window_config)?;
 
     #[cfg(target_os = "windows")]
-    if let Some(paths) = crate::portable::paths() {
-        builder = builder.data_directory(paths.webview2_dir().to_path_buf());
-    }
+    let builder = match crate::portable::paths() {
+        Some(paths) => builder.data_directory(paths.webview2_dir().to_path_buf()),
+        None => builder,
+    };
 
     builder.build()
 }

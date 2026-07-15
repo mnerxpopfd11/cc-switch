@@ -34,7 +34,7 @@ fn is_windows_reserved_file_name(name: &str) -> bool {
 fn safe_portable_export_file_name(default_name: &str) -> String {
     let candidate = default_name
         .trim()
-        .rsplit(|character| character == '/' || character == '\\')
+        .rsplit(['/', '\\'])
         .next()
         .unwrap_or_default()
         .trim();

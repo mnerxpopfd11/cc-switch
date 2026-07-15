@@ -1542,18 +1542,22 @@ pub fn run() {
             commands::is_lightweight_mode,
         ]);
 
-    let mut context = tauri::generate_context!();
+    let context = tauri::generate_context!();
     #[cfg(target_os = "windows")]
-    if portable::is_portable() {
-        let main_window = context
-            .config_mut()
-            .app
-            .windows
-            .iter_mut()
-            .find(|window| window.label == "main")
-            .unwrap_or_else(|| panic!("main window configuration not found"));
-        main_window.create = false;
-    }
+    let context = {
+        let mut context = context;
+        if portable::is_portable() {
+            let main_window = context
+                .config_mut()
+                .app
+                .windows
+                .iter_mut()
+                .find(|window| window.label == "main")
+                .unwrap_or_else(|| panic!("main window configuration not found"));
+            main_window.create = false;
+        }
+        context
+    };
 
     let app = builder
         .build(context)
