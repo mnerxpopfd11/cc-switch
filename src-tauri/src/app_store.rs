@@ -148,7 +148,8 @@ fn resolve_path(raw: &str) -> PathBuf {
 
 /// 从旧的 settings.json 迁移 app_config_dir 到 Store
 pub fn migrate_app_config_dir_from_settings(app: &tauri::AppHandle) -> Result<(), AppError> {
-    if let Some(portable_app_dir) = crate::portable::paths().map(|paths| paths.app_dir().to_path_buf())
+    if let Some(portable_app_dir) =
+        crate::portable::paths().map(|paths| paths.app_dir().to_path_buf())
     {
         update_cached_override(Some(portable_app_dir));
         return Ok(());

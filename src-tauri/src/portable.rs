@@ -140,9 +140,7 @@ fn initialize_once() -> Result<(), String> {
 fn detect_portable_marker(marker_path: &Path) -> Result<bool, String> {
     match fs::symlink_metadata(marker_path) {
         Ok(metadata) => {
-            if metadata.file_type().is_symlink()
-                || platform_metadata_is_reparse_point(&metadata)
-            {
+            if metadata.file_type().is_symlink() || platform_metadata_is_reparse_point(&metadata) {
                 Err(format!(
                     "portable initialization failed: marker is a link or reparse point: {}",
                     marker_path.display()
@@ -227,9 +225,7 @@ fn reject_reparse_points_in_tree(root: &Path) -> Result<(), String> {
                 ));
             }
         };
-        if metadata.file_type().is_symlink()
-            || platform_metadata_is_reparse_point(&metadata)
-        {
+        if metadata.file_type().is_symlink() || platform_metadata_is_reparse_point(&metadata) {
             return Err(format!(
                 "portable initialization failed: managed path is a link or reparse point: {}",
                 path.display()
@@ -262,9 +258,7 @@ fn reject_reparse_points_in_tree(root: &Path) -> Result<(), String> {
 fn reject_reparse_point(path: &Path) -> Result<(), String> {
     match fs::symlink_metadata(path) {
         Ok(metadata) => {
-            if metadata.file_type().is_symlink()
-                || platform_metadata_is_reparse_point(&metadata)
-            {
+            if metadata.file_type().is_symlink() || platform_metadata_is_reparse_point(&metadata) {
                 Err(format!(
                     "portable initialization failed: managed path is a link or reparse point: {}",
                     path.display()
@@ -402,16 +396,12 @@ mod tests {
     #[cfg(windows)]
     #[test]
     fn derives_paths_from_windows_executable() {
-        let paths = PortablePaths::from_executable(Path::new(
-            r"D:\Portable\CC-Switch\cc-switch.exe",
-        ))
-        .expect("the executable has a parent directory");
+        let paths =
+            PortablePaths::from_executable(Path::new(r"D:\Portable\CC-Switch\cc-switch.exe"))
+                .expect("the executable has a parent directory");
 
         assert_eq!(paths.root(), Path::new(r"D:\Portable\CC-Switch"));
-        assert_eq!(
-            paths.data_dir(),
-            Path::new(r"D:\Portable\CC-Switch\data")
-        );
+        assert_eq!(paths.data_dir(), Path::new(r"D:\Portable\CC-Switch\data"));
         assert_eq!(paths.app_dir(), paths.data_dir().join("app"));
         assert_eq!(paths.cache_dir(), paths.data_dir().join("cache"));
         assert_eq!(paths.temp_dir(), paths.data_dir().join("temp"));
@@ -527,8 +517,8 @@ mod tests {
         let paths = PortablePaths::from_executable(&root.join("cc-switch.exe"))
             .expect("derive portable paths");
 
-        let error = prepare_portable_directories(&paths)
-            .expect_err("nested managed link must be rejected");
+        let error =
+            prepare_portable_directories(&paths).expect_err("nested managed link must be rejected");
 
         assert!(error.contains("link or reparse point"));
         assert_eq!(

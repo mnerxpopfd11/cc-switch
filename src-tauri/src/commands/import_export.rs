@@ -28,9 +28,7 @@ fn is_windows_reserved_file_name(name: &str) -> bool {
         || upper
             .strip_prefix("COM")
             .or_else(|| upper.strip_prefix("LPT"))
-            .is_some_and(|suffix| {
-                suffix.len() == 1 && matches!(suffix.as_bytes()[0], b'1'..=b'9')
-            })
+            .is_some_and(|suffix| suffix.len() == 1 && matches!(suffix.as_bytes()[0], b'1'..=b'9'))
 }
 
 fn safe_portable_export_file_name(default_name: &str) -> String {
@@ -70,9 +68,7 @@ fn normalize_absolute_path(path: &Path) -> Result<PathBuf, String> {
             }
             Component::CurDir => {}
             Component::ParentDir => {
-                return Err(
-                    "export target must not contain parent-directory traversal".to_string(),
-                );
+                return Err("export target must not contain parent-directory traversal".to_string());
             }
         }
     }
@@ -85,19 +81,13 @@ fn canonicalize_parent_allowing_missing(path: &Path) -> Result<PathBuf, String> 
     let mut missing: Vec<OsString> = Vec::new();
 
     while !existing.exists() {
-        let name = existing.file_name().ok_or_else(|| {
-            format!(
-                "export target has no existing ancestor: {}",
-                path.display()
-            )
-        })?;
+        let name = existing
+            .file_name()
+            .ok_or_else(|| format!("export target has no existing ancestor: {}", path.display()))?;
         missing.push(name.to_os_string());
-        existing = existing.parent().ok_or_else(|| {
-            format!(
-                "export target has no existing ancestor: {}",
-                path.display()
-            )
-        })?;
+        existing = existing
+            .parent()
+            .ok_or_else(|| format!("export target has no existing ancestor: {}", path.display()))?;
     }
 
     if !existing.is_dir() {
@@ -520,7 +510,8 @@ mod tests {
         let data = temp.path().join("data");
         std::fs::create_dir_all(&data).expect("create data directory");
 
-        assert!(validate_export_target_in_data(Path::new(r"C:\cc-switch-export.sql"), &data)
-            .is_err());
+        assert!(
+            validate_export_target_in_data(Path::new(r"C:\cc-switch-export.sql"), &data).is_err()
+        );
     }
 }

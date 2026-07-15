@@ -42,10 +42,7 @@ fn state_path() -> Result<PathBuf, String> {
 }
 
 fn is_reasonable_size(width: u32, height: u32) -> bool {
-    width > 0
-        && height > 0
-        && width <= MAX_WINDOW_DIMENSION
-        && height <= MAX_WINDOW_DIMENSION
+    width > 0 && height > 0 && width <= MAX_WINDOW_DIMENSION && height <= MAX_WINDOW_DIMENSION
 }
 
 fn rects_intersect(left: PhysicalRect, right: PhysicalRect) -> bool {
@@ -54,10 +51,7 @@ fn rects_intersect(left: PhysicalRect, right: PhysicalRect) -> bool {
     let right_right = right.x + i64::from(right.width);
     let right_bottom = right.y + i64::from(right.height);
 
-    left.x < right_right
-        && left_right > right.x
-        && left.y < right_bottom
-        && left_bottom > right.y
+    left.x < right_right && left_right > right.x && left.y < right_bottom && left_bottom > right.y
 }
 
 pub fn save(app: &tauri::AppHandle) -> Result<(), String> {
@@ -175,8 +169,7 @@ mod tests {
         };
 
         let json = serde_json::to_string(&state).expect("serialize window state");
-        let restored: WindowState =
-            serde_json::from_str(&json).expect("deserialize window state");
+        let restored: WindowState = serde_json::from_str(&json).expect("deserialize window state");
 
         assert_eq!(restored, state);
     }

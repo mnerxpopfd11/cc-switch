@@ -24,7 +24,8 @@ fn default_app_config_dir() -> PathBuf {
 }
 
 fn default_app_config_dir_from_home(home: Option<PathBuf>) -> PathBuf {
-    home.unwrap_or_else(|| PathBuf::from(".")).join(".cc-switch")
+    home.unwrap_or_else(|| PathBuf::from("."))
+        .join(".cc-switch")
 }
 
 /// 获取应用配置目录（优先使用初始化时写入的值；不会 panic）
